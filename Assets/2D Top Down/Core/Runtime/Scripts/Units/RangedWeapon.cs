@@ -2,47 +2,61 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedWeapon : Weapon
+
+namespace TopDownLentera
 {
-    [SerializeField] private Projectile _projectile;
-    [SerializeField] private int _ammo = 5;
-    [SerializeField] private int _damage = 1;
-    [SerializeField] private float _force = 10f;
-
-    private ObjectPooler _projectilePooler;
-    private Vector2 _direction = Vector2.zero;
-
-    private void Start()
+    public class RangedWeapon : Weapon
     {
-        _projectilePooler = ObjectPooler.Create(_projectile.gameObject);
-        _projectilePooler.Init(_ammo);
-    }
+        #region Variables
 
-    private void Update()
-    {
-        LookToCursor();
-    }
+        [SerializeField] 
+        private Projectile _projectile;
+        [SerializeField] 
+        private int _ammo = 5;
+        [SerializeField] 
+        private int _damage = 1;
+        [SerializeField] 
+        private float _force = 10f;
+        [SerializeField] 
+        private float _delayShoot = 1f;
 
-    public override void Attack(Character owner, string target)
-    {
-        if (_ammo == 0) return;
+        private ObjectPooler _projectilePooler;
+        private bool _canShoot = true;
 
-        // spawn projetile
-        GameObject projectileObj = _projectilePooler.SpawnObject(transform.position, Quaternion.identity);
+        #endregion
 
-        // find shoot direction and shoot projectile
-        Projectile projectile = projectileObj.GetComponent<Projectile>();
-        projectile.Shoot(owner, target, _direction, _force, _damage);
-    }
+        #region Methods
 
-    private void LookToCursor()
-    {
-        _direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        private void Start()
+        {
+            _projectilePooler = ObjectPooler.Create(_projectile.gameObject);
+            _projectilePooler.Init(_ammo);
+        }
 
-        float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
-        Quaternion angleAxis = Quaternion.AngleAxis(angle, Vector3.forward);
+        public override void Attack(Character owner, string target, Vector2 direction)
+        {
+            if (_ammo == 0) return;
+            if (!_canShoot) return;
 
-        // rotate player object
-        transform.rotation = angleAxis;
+            // spawn projetile
+            GameObject projectileObj = _projectilePooler.SpawnObject(transform.position, Quaternion.identity);
+
+            // find shoot direction and shoot projectile
+            Projectile projectile = projectileObj.GetComponent<Projectile>();
+            projectile.Shoot(owner, target, direction, _force, _damage);
+
+            StartCoroutine(DelayShoot());
+        }
+
+        private IEnumerator DelayShoot()
+        {
+            _canShoot = false;
+
+            yield return new WaitForSeconds(_delayShoot);
+
+            _canShoot = true;
+        }
+
+        #endregion
     }
 }

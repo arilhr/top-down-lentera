@@ -2,57 +2,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PatrolEnemy : Enemy
+namespace TopDownLentera
 {
-    public float speed = 5f;
-    public List<Vector3> movePos;
-    public float timeBetweenMove = 3f;
+    public class PatrolEnemy : Enemy
+    {
+        [SerializeField] protected float _speed = 5f;
+        [SerializeField] protected float _delayBetweenMove = 3f;
+        [SerializeField] protected List<Vector3> _movePositions;
     
-    private bool isMoving = true;
-    private int currentTarget = 0;
+        protected bool _isMoving = true;
+        protected int _currentTarget = 0;
 
-    private void Update()
-    {
-        Move();
-    }
-
-    public void Move()
-    {
-        if (!isMoving) return;
-        if (isDead) return;
-
-        if (Vector3.Distance(transform.position, movePos[currentTarget]) > 0.1f)
+        private void Update()
         {
-            transform.position = Vector3.MoveTowards(transform.position, movePos[currentTarget], speed * Time.deltaTime);
+            Move();
         }
-        else
+
+        public void Move()
         {
-            currentTarget++;
-            if (currentTarget >= movePos.Count)
+            if (!_isMoving) return;
+            if (isDead) return;
+
+            if (Vector3.Distance(transform.position, _movePositions[_currentTarget]) > 0.1f)
             {
-                currentTarget = 0;
+                transform.position = Vector3.MoveTowards(transform.position, _movePositions[_currentTarget], _speed * Time.deltaTime / 10);
+                return;
             }
 
-            isMoving = false;
+            _currentTarget++;
+            if (_currentTarget >= _movePositions.Count)
+            {
+                _currentTarget = 0;
+            }
+
+            _isMoving = false;
             StartCoroutine(WaitNextMove());
         }
-    }
 
-    public IEnumerator WaitNextMove()
-    {
-        yield return new WaitForSeconds(timeBetweenMove);
+        public IEnumerator WaitNextMove()
+        {
+            yield return new WaitForSeconds(_delayBetweenMove);
 
-        isMoving = true;
-    }
+            _isMoving = true;
+        }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (isDead) return;
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (isDead) return;
 
-        Player player = collision.gameObject.GetComponent<Player>();
-        if (player == null) return;
+            Player player = collision.gameObject.GetComponent<Player>();
+            if (player == null) return;
 
-        player.TakeDamage(1);
-        player.SetLastAttacker(this);
+            player.TakeDamage(1, this);
+        }
     }
 }

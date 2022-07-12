@@ -3,34 +3,37 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+namespace TopDownLentera
 {
-    public static UIManager Instance;
-
-    public GameObject menuUI;
-    public GameObject startUI;
-
-    public TMP_Text dieText;
-    public TMP_Text healthText;
-
-    private void Awake()
+    public class UIManager : MonoBehaviour
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
+        public static UIManager Instance;
 
+        public GameObject menuUI;
+        public GameObject startUI;
 
-    public void ClickStart()
-    {
-        GameManager.Instance.StartGame();
-    }
+        public TMP_Text dieText;
+        public TMP_Text healthText;
 
-    private void Start()
-    {
-        GameManager.Instance.OnChangeState += (state) =>
+        private void Awake()
         {
-            menuUI.SetActive(state == GameState.Menu);
-            startUI.SetActive(state == GameState.Start);
-        };
+            if (Instance == null) Instance = this;
+            else Destroy(gameObject);
+        }
+
+
+        public void ClickStart()
+        {
+            GameManager.Instance.StartGame();
+        }
+
+        private void Start()
+        {
+            GameManager.Instance.OnChangeState += (state) =>
+            {
+                menuUI.SetActive(state == GameState.Menu);
+                startUI.SetActive(state == GameState.Start);
+            };
+        }
     }
 }

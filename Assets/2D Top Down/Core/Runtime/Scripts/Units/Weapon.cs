@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Weapon : MonoBehaviour
+namespace TopDownLentera
 {
-    public Sprite weaponSprite;
+    public abstract class Weapon : MonoBehaviour
+    {
+        public Sprite weaponSprite;
 
-    public abstract void Attack(Character owner, string target);
+        public abstract void Attack(Character owner, string target, Vector2 direction);
+    }
 }

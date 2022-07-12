@@ -2,48 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPooler : MonoBehaviour
+namespace TopDownLentera
 {
-    public GameObject objectPooled;
-    private List<GameObject> _pooledObjects = new List<GameObject>();
-
-    public static ObjectPooler Create(GameObject objectToPool)
+    public class ObjectPooler : MonoBehaviour
     {
-        GameObject poolerObj = new GameObject(objectToPool.name + " Pooler");
-        ObjectPooler pooler = poolerObj.AddComponent<ObjectPooler>();
-        pooler.objectPooled = objectToPool;
+        public GameObject objectPooled;
+        private List<GameObject> _pooledObjects = new List<GameObject>();
 
-        return pooler;
-    }
-
-    public void Init(int initialSize)
-    {
-        for (int i = 0; i < initialSize; i++)
+        public static ObjectPooler Create(GameObject objectToPool)
         {
-            GameObject objectSpawned = Instantiate(objectPooled);
-            _pooledObjects.Add(objectSpawned);
-            objectSpawned.SetActive(false);
+            GameObject poolerObj = new GameObject(objectToPool.name + " Pooler");
+            ObjectPooler pooler = poolerObj.AddComponent<ObjectPooler>();
+            pooler.objectPooled = objectToPool;
+
+            return pooler;
         }
-    }
 
-    public GameObject SpawnObject(Vector3 position, Quaternion rotation)
-    {
-        GameObject objectSpawned = null;
-        objectSpawned = _pooledObjects.Find(x => !x.activeInHierarchy);
-
-        if (objectSpawned == null)
+        public void Init(int initialSize)
         {
-            objectSpawned = Instantiate(objectPooled, position, rotation);
-            _pooledObjects.Add(objectSpawned);
+            for (int i = 0; i < initialSize; i++)
+            {
+                GameObject objectSpawned = Instantiate(objectPooled);
+                _pooledObjects.Add(objectSpawned);
+                objectSpawned.SetActive(false);
+            }
+        }
+
+        public GameObject SpawnObject(Vector3 position, Quaternion rotation)
+        {
+            GameObject objectSpawned = null;
+            objectSpawned = _pooledObjects.Find(x => !x.activeInHierarchy);
+
+            if (objectSpawned == null)
+            {
+                objectSpawned = Instantiate(objectPooled, position, rotation);
+                _pooledObjects.Add(objectSpawned);
+
+                return objectSpawned;
+            }
+
+            objectSpawned.transform.position = position;
+            objectSpawned.transform.rotation = rotation;
+            objectSpawned.SetActive(true);
 
             return objectSpawned;
         }
-
-        objectSpawned.transform.position = position;
-        objectSpawned.transform.rotation = rotation;
-        objectSpawned.SetActive(true);
-
-        return objectSpawned;
     }
 }
 

@@ -5,38 +5,42 @@ using UnityEditor;
 using UnityEngine;
 
 
-public abstract class Character : MonoBehaviour
+namespace TopDownLentera
 {
-    [Header("Stats")]
-    public int health = 3;
-    public float respawnTime = 3f;
-    public bool isDead = false;
-
-    public virtual void TakeDamage(int damage)
+    public abstract class Character : MonoBehaviour
     {
-        Debug.Log($"{name} took {damage} damage");
-        health -= damage;
-        if (health <= 0)
+        [Header("Stats")]
+        public int health = 3;
+        public float respawnTime = 3f;
+        public bool isDead = false;
+
+        public virtual void TakeDamage(int damage, Character damager = null)
         {
-            Die();
+            if (health == 0) return;
+
+            health -= damage;
+            if (health <= 0)
+            {
+                Die();
+            }
         }
-    }
 
-    public virtual void Respawn()
-    {
-        isDead = false;
-        health = 3;
-    }
+        public virtual void Respawn()
+        {
+            isDead = false;
+            health = 3;
+        }
 
-    public virtual void Die()
-    {
-        isDead = true;
-    }
+        public virtual void Die()
+        {
+            isDead = true;
+        }
 
-    public IEnumerator OnRespawn()
-    {
-        yield return new WaitForSeconds(respawnTime);
+        public IEnumerator OnRespawn()
+        {
+            yield return new WaitForSeconds(respawnTime);
 
-        Respawn();
+            Respawn();
+        }
     }
 }
