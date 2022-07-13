@@ -61,6 +61,10 @@ namespace TopDownLentera
             Collider2D[] collides = Physics2D.OverlapCircleAll(point, _detectionAreaSize, _target);
             foreach (Collider2D target in collides)
             {
+                Player player = target.GetComponent<Player>();
+                
+                if (player.isDead) return;
+
                 Vector2 direction = target.transform.position - transform.position;
                 _weapon.Attack(this, "Player", direction);
             }
@@ -75,17 +79,17 @@ namespace TopDownLentera
             _weapon.Attack(this, "Player", direction);
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            
-        }
+        private void OnTriggerEnter2D(Collider2D collision) { }
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
+            if (_shootType == ShootType.Nearby)
+            {
+                Gizmos.color = Color.red;
 
-            Vector2 point = new Vector2(transform.position.x, transform.position.y) + _detectionAreaOffset;
-            Gizmos.DrawWireSphere(point, _detectionAreaSize);
+                Vector2 point = new Vector2(transform.position.x, transform.position.y) + _detectionAreaOffset;
+                Gizmos.DrawWireSphere(point, _detectionAreaSize);
+            }
         }
     }
 }

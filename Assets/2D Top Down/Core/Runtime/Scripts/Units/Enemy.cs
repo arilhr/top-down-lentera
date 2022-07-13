@@ -6,19 +6,33 @@ namespace TopDownLentera
 {
     public class Enemy : Character
     {
-        public GameObject graphic;
+        #region Variables
+
+        protected GameManager _gameManager;
+        
+        protected Vector3 _startPosition;
+
+        #endregion
+        
+        protected virtual void Start()
+        {
+            _gameManager = GameManager.Instance;
+            _startPosition = transform.position;
+        }
 
         public override void Die()
         {
             base.Die();
-            graphic.SetActive(false);
-            StartCoroutine(OnRespawn());
+            gameObject.SetActive(false);
+            _gameManager.StartCoroutine(OnRespawn());
         }
 
         public override void Respawn()
         {
             base.Respawn();
-            graphic.SetActive(true);
+            
+            transform.position = _startPosition;
+            gameObject.SetActive(true);
         }
     }
 }

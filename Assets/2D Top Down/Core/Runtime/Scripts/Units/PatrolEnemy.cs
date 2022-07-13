@@ -13,6 +13,11 @@ namespace TopDownLentera
         protected bool _isMoving = true;
         protected int _currentTarget = 0;
 
+        private void OnEnable()
+        {
+            _isMoving = true;
+        }
+
         private void Update()
         {
             Move();

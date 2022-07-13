@@ -34,6 +34,8 @@ namespace TopDownLentera
 
         private void AttackInput()
         {
+            if (_player.isDead) return;
+            
             if (Input.GetMouseButtonDown(0))
             {
                 weapons[currentWeapon].Attack(_player, "Enemy", _direction);

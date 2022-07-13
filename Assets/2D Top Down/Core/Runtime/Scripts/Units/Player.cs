@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 namespace TopDownLentera
@@ -10,28 +9,28 @@ namespace TopDownLentera
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : Character
     {
-        public static Player Instance;
+        #region Variables
 
-        [SerializeField] private float speed = 10f;
+        [SerializeField] 
+        private float speed = 10f;
 
-        [SerializeField] private GameObject _graphics;
-        [SerializeField] private Rigidbody2D _rigidbody;
+        [SerializeField] 
+        private GameObject _graphics;
+        [SerializeField] 
+        private Rigidbody2D _rigidbody;
 
         private Character _lastAttacker;
         private GameManager _gameManager;
         private Vector2 _moveInput = Vector2.zero;
         private bool _flipped = false;
+        private Vector3 _startPosition;
 
-
-        private void Awake()
-        {
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
-        }
+        #endregion
 
         private void Start()
         {
             _gameManager = GameManager.Instance;
+            _startPosition = transform.position;
         }
 
         private void Update()
@@ -89,16 +88,18 @@ namespace TopDownLentera
         {
             base.Die();
 
-            _graphics.SetActive(false);
+            gameObject.SetActive(false);
             CameraController.Instance.SetTarget(_lastAttacker.transform);
-            StartCoroutine(OnRespawn());
+            _gameManager.StartCoroutine(OnRespawn());
         }
 
         public override void Respawn()
         {
             base.Respawn();
 
-            _graphics.SetActive(true);
+            gameObject.SetActive(true);
+            transform.position = _startPosition;
+
             CameraController.Instance.SetTarget(transform);
         }
     }

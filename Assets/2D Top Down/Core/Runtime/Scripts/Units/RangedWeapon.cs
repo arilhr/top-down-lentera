@@ -33,6 +33,11 @@ namespace TopDownLentera
             _projectilePooler.Init(_ammo);
         }
 
+        private void OnEnable()
+        {
+            _canShoot = true;
+        }
+
         public override void Attack(Character owner, string target, Vector2 direction)
         {
             if (_ammo == 0) return;

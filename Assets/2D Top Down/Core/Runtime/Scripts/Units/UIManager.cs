@@ -9,11 +9,9 @@ namespace TopDownLentera
     {
         public static UIManager Instance;
 
-        public GameObject menuUI;
-        public GameObject startUI;
-
-        public TMP_Text dieText;
         public TMP_Text healthText;
+
+        private Player _player;
 
         private void Awake()
         {
@@ -22,18 +20,14 @@ namespace TopDownLentera
         }
 
 
-        public void ClickStart()
-        {
-            GameManager.Instance.StartGame();
-        }
-
         private void Start()
         {
-            GameManager.Instance.OnChangeState += (state) =>
-            {
-                menuUI.SetActive(state == GameState.Menu);
-                startUI.SetActive(state == GameState.Start);
-            };
+            _player = FindObjectOfType<Player>();
+        }
+
+        private void Update()
+        {
+            healthText.text = "HP: " + _player.health.ToString();
         }
     }
 }
