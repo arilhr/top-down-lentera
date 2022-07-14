@@ -33,6 +33,8 @@ namespace TopDownLentera
 
         #endregion
 
+        #region Methods
+        
         private void Update()
         {
             if (isDead) return;
@@ -91,5 +93,7 @@ namespace TopDownLentera
                 Gizmos.DrawWireSphere(point, _detectionAreaSize);
             }
         }
+        
+        #endregion
     }
 }
