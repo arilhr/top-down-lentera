@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/2D Top Down/Implementation/Prototype/Test Maps/Test Map.unity
     guid: c5e15c34e5a940344af390fcd66c9826
+  - enabled: 1
+    path: Assets/2D Top Down/Implementation/Gameplay/Map 1/Map 1.unity
+    guid: 794f3b7e46b2edd4ba65cddc3d51eb93
   m_configObjects: {}

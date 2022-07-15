@@ -6,17 +6,21 @@ namespace TopDownLentera
 {
     public class PlayerAttack : MonoBehaviour
     {
+        #region Variables
+
         [SerializeReference] private List<Weapon> weapons;
 
         [SerializeField] private LayerMask enemyLayer;
 
-        // 0: Ranged, 1: Melee
         private int currentWeapon = 0;
 
         private Vector2 _direction = Vector2.zero;
         private Player _player;
         private GameManager _gameManager;
 
+        #endregion
+
+        #region Mono Behaviours
 
         private void Start()
         {
@@ -26,11 +30,15 @@ namespace TopDownLentera
 
         private void Update()
         {
-            if (_gameManager.state != GameState.Start) return;
+            if (_gameManager.State != GameState.Start) return;
 
             AttackInput();
             LookToCursor();
         }
+
+        #endregion
+
+        #region Methods
 
         private void AttackInput()
         {
@@ -62,6 +70,8 @@ namespace TopDownLentera
         {
             _direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         }
+
+        #endregion
     }
 }
 

@@ -2,20 +2,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum GameState
 {
     Menu,
-    Start
+    Start,
+    GameEnd
 }
 
 public class GameManager : MonoBehaviour
 {
+    #region Variables
+    
     public static GameManager Instance;
 
-    public GameState state = GameState.Menu;
+    private GameState _state;
 
-    public Action<GameState> OnChangeState;
+    [SerializeField]
+    private UnityEvent<GameState> OnChangeState;
+    
+    [SerializeField] 
+    private UnityEvent OnGameWin;
+
+    #endregion
+
+    #region Mono Behaviours
 
     private void Awake()
     {
@@ -23,15 +35,35 @@ public class GameManager : MonoBehaviour
         else Destroy(this);
     }
 
+    private void Start()
+    {
+        StartGame();
+    }
+
+    #endregion
+
+    #region Methods
+    public GameState State
+    {
+        get { return _state; }
+        set
+        {
+            _state = value;
+            OnChangeState?.Invoke(_state);
+        }
+    }
+    
     public void StartGame()
     {
-        ChangeState(GameState.Start);
+        State = GameState.Start;
     }
 
-    public void ChangeState(GameState newState)
+    public void GameWin()
     {
-        state = newState;
+        State = GameState.GameEnd;
 
-        OnChangeState?.Invoke(newState);
+        OnGameWin?.Invoke();
     }
+
+    #endregion
 }

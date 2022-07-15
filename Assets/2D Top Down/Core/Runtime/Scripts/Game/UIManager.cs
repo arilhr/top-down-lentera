@@ -17,6 +17,8 @@ namespace TopDownLentera
         public TMP_Text healthText;
         public GameObject pausePanel;
 
+        public GameObject winPanel;
+
         private Player _player;
 
         public UnityEvent OnExitGame;
@@ -56,6 +58,11 @@ namespace TopDownLentera
         {
             Time.timeScale = 1;
             pausePanel.SetActive(false);
+        }
+
+        public void Win()
+        {
+            winPanel.SetActive(true);
         }
 
         public void Exit()

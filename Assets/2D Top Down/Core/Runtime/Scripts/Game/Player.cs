@@ -35,10 +35,9 @@ namespace TopDownLentera
 
         private void Update()
         {
-            if (_gameManager.state != GameState.Start) return;
+            if (_gameManager.State != GameState.Start) return;
 
             CheckFlip();
-            InputMove();
         }
 
         private void FixedUpdate()
@@ -46,20 +45,15 @@ namespace TopDownLentera
             Move();
         }
 
-        private void InputMove()
-        {
-            _moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        }
-
         private void Move()
         {
-            if (isDead)
+            if (isDead || _gameManager.State != GameState.Start)
             {
                 _rigidbody.velocity = Vector2.zero;
                 return;
             }
 
-            _rigidbody.velocity = _moveInput * speed;
+            _rigidbody.velocity = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * speed;
         }
 
         private void CheckFlip()
@@ -78,10 +72,11 @@ namespace TopDownLentera
 
         public override void TakeDamage(int damage, Character damager = null)
         {
+            _lastAttacker = damager;
+            
             base.TakeDamage(damage, damager);
 
             Debug.Log($"Player has been attacked by {damager.name}");
-            _lastAttacker = damager;
         }
 
         public override void Die()

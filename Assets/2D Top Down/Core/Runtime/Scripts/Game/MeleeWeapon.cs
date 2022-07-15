@@ -6,6 +6,8 @@ namespace TopDownLentera
 {
     public class MeleeWeapon : Weapon
     {
+        #region Variables
+        
         [SerializeField] private int _damage;
         [SerializeField] private Vector2 _areaSize;
         [SerializeField] private Vector2 _areaOffset;
@@ -15,6 +17,26 @@ namespace TopDownLentera
 
         private bool _canAttack = true;
 
+        #endregion
+
+        #region Mono Behaviours
+
+        private void OnEnable()
+        {
+            _canAttack = true;
+        }
+
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Vector2 point = new Vector2(transform.position.x, transform.position.y) + _areaOffset * transform.lossyScale;
+            Gizmos.DrawWireCube(point, _areaSize);
+        }
+
+        #endregion
+
+        #region Methods
         public override void Attack(Character owner, string target, Vector2 direction)
         {
             if (!_canAttack) return;
@@ -42,12 +64,7 @@ namespace TopDownLentera
             _canAttack = true;
         }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Vector2 point = new Vector2(transform.position.x, transform.position.y) + _areaOffset * transform.lossyScale;
-            Gizmos.DrawWireCube(point, _areaSize);
-        }
+        #endregion
     }
 
 }
